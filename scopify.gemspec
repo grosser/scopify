@@ -20,6 +20,7 @@ Gem::Specification.new do |s|
      "VERSION",
      "lib/scopify.rb",
      "lib/scopify/scope.rb",
+     "scopify.gemspec",
      "spec/scopify_spec.rb",
      "spec/spec_helper.rb"
   ]
