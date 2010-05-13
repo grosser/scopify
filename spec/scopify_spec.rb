@@ -81,5 +81,11 @@ describe Scopify do
       T1.scope(:aaa, lambda{|a| {:limit => a}})
       T1.aaa(1).foo.should == {:limit => 1}
     end
+
+    it "can stack scopes by name" do
+      T1.scope(:bbb, :limit => 1)
+      T1.scope(:bbb2, :offset => 1)
+      T1.bbb.bbb2.foo.should == {:limit => 1, :offset => 1}
+    end
   end
 end
