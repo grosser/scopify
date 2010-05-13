@@ -18,6 +18,7 @@ Gem::Specification.new do |s|
     "README.md",
      "Rakefile",
      "VERSION",
+     "init.rb",
      "lib/scopify.rb",
      "lib/scopify/scope.rb",
      "scopify.gemspec",
