@@ -61,6 +61,10 @@ describe Scopify do
     it "can use custom scope_to_hash" do
       T2.scoped(:offset => 1).scoped(:offset => 2).foo.should == {:offset => 3}
     end
+
+    it "does not mess with arrays" do
+      T2.scoped(:x => [[1]]).scoped(:x => [[2]]).scope_options.should == {:x => [[[1]], [[2]]]}
+    end
   end
 
   describe :scope do
