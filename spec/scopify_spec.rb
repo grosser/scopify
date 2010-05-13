@@ -96,4 +96,8 @@ describe Scopify do
       T1.ccc2.ccc.foo.should == {:order => 'b, a'}
     end
   end
+
+  it "has a VERSION" do
+    Scopify::VERSION.should =~ /^\d+\.\d+\.\d+$/
+  end
 end
