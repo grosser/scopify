@@ -60,4 +60,17 @@ describe Scopify do
       T2.scoped(:offset => 1).scoped(:offset => 2).foo.should == {:offset => 3}
     end
   end
+
+  describe :scope do
+    it "adds a named scope" do
+      T1.scope(:yyy, :limit => 1)
+      T1.yyy.foo.should == {:limit => 1}
+    end
+
+    it "can add a scoped scope" do
+      T1.scope(:xxx, :limit => 1)
+      T1.scope(:xxx2, T1.xxx.scoped(:offset => 1))
+      T1.xxx2.foo.should == {:limit => 1, :offset => 1}
+    end
+  end
 end
