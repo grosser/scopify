@@ -1,5 +1,8 @@
 Add named scopes and chainable scopes to any Object / Model.
 
+ - As gem: ` sudo gem install scopify `
+ - As Rails plugin: ` rails plugin install git://github.com/grosser/scopify.git `
+
 Usage
 =====
 
