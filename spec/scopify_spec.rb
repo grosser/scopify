@@ -20,11 +20,9 @@ class T2
   end
 
   def self.scope_to_hash(options)
-    hash = {}
-    options.each do |k,v|
-      hash[k] = v[0]+v[1]
+    options.map do |k,v|
+      [k, v[0]+v[1]]
     end
-    hash
   end
 end
 
