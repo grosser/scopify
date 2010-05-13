@@ -11,14 +11,24 @@ module Scopify
     end
 
     def scope(name, options)
+      # give access to current options inside of evaled method
       meta_class = (class << self; self; end)
-      meta_class.send(:define_method, name) do
-        if options.is_a?(Scope)
-          options
-        else
-          scoped(options)
-        end
+      meta_class.send(:define_method, "#{name}_scope_options") do
+        options
       end
+
+      class_eval <<-CODE
+        def self.#{name}(*args)
+          options = #{name}_scope_options
+          if options.is_a?(Proc)
+            scoped(options.call(*args))
+          elsif options.is_a?(Scope)
+            options
+          else
+            scoped(options)      
+          end
+        end
+      CODE
     end
   end
 end

@@ -72,5 +72,10 @@ describe Scopify do
       T1.scope(:xxx2, T1.xxx.scoped(:offset => 1))
       T1.xxx2.foo.should == {:limit => 1, :offset => 1}
     end
+
+    it "can add scope with arguments" do
+      T1.scope(:aaa, lambda{|a| {:limit => a}})
+      T1.aaa(1).foo.should == {:limit => 1}
+    end
   end
 end
