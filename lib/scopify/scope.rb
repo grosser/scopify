@@ -36,17 +36,25 @@ module Scopify
     end
 
     def to_hash
-      return @base.scope_to_hash(@options) if @base.respond_to?(:scope_to_hash)
-
-      hash = {}
-      @options.each do |k,v|
-        hash[k] = case k
-        when :limit, :offset then v.min
-        when :order then v * ', '  
-        else v 
+      result = if @base.respond_to?(:scope_to_hash)
+        @base.scope_to_hash(@options)
+      else
+        @options.map do |k,v|
+          result = case k
+          when :limit, :offset then v.min
+          when :order then v * ', '
+          else v
+          end
+          [k, result]
         end
       end
-      hash
+
+      if result.is_a?(Hash)
+        result
+      else
+        # convert array to hash
+        result.inject({}){|h, kv| h[kv[0]] = kv[1]; h}
+      end
     end
 
     def method_missing(method_name, *args, &block)
