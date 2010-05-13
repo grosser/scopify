@@ -7,7 +7,7 @@ module Scopify
 
   module ClassMethods
     def scoped(options)
-      Scope.new(self, options)
+      Scope.build(self, options)
     end
   end
 end
