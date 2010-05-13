@@ -1,18 +1,21 @@
 Add named scopes and scoped to any Object / Model.
 
-Setup
-=====
-    class CrazyNewDatabaseWrapper
-      include Scopify
-      scopify
-
-      scope :good, :conditions => {:good => true}
-    end
-
 Usage
 =====
-    # if all is implemented on CrazyNewDatabaseWrapper, you can use:
-    CrazyNewDatabaseWarpper.scoped(:limit => 10).scoped(:order => "something").all
+
+`scope` -- create named scopes, with options, lambdas or even other scopes!
+    class MyDBWrapper
+      include Scopify
+      scope :good, :conditions => {:good => true}
+      scope :okay, good.scoped(:conditions => {:goodness => [1,2,3]}
+      scope :goodness, lambda{|factor| {:conditions => {:goodness => factor}} }
+    end
+
+    MyDBWrapper.good.first
+
+`scoped` -- create a scope on the fly
+    MyDBWrapper.scoped(:limit => 10).scoped(:order => "something").all(:offset => 1)
+    --> MyDBWrapper.all receives: {:limit => 10, :order => "something", :offset => 1}
 
 Author
 ======
