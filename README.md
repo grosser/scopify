@@ -12,6 +12,7 @@ Usage
     end
 
     MyDBWrapper.good.first
+    MyDBWrapper.good.goodness(3).first
 
 `scoped` -- create a scope on the fly
     MyDBWrapper.scoped(:limit => 10).scoped(:order => "something").all(:offset => 1)

@@ -87,5 +87,11 @@ describe Scopify do
       T1.scope(:bbb2, :offset => 1)
       T1.bbb.bbb2.foo.should == {:limit => 1, :offset => 1}
     end
+
+    it "keeps oder when stacking by name" do
+      T1.scope(:ccc, :order => 'a')
+      T1.scope(:ccc2, :order => 'b')
+      T1.ccc2.ccc.foo.should == {:order => 'b, a'}
+    end
   end
 end

@@ -20,8 +20,9 @@ module Scopify
       if options.is_a?(Scope)
         # merge in raw options e.g. :limit => [1, 2]
         options.scope_options.each do |k,v|
-          merged[k] ||= []
-          v.each{|x| merged[k] << x }
+          old = merged[k] || []
+          merged[k] = v
+          old.each{|x| merged[k] << x }
         end
       else
         # merge in a normal hash e.g. :limit => 1
