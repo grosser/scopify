@@ -12,8 +12,8 @@ module Scopify
       Scope.build(self, options)
     end
 
-    # overwrite tis to enable your custom scopes
-    def return_scope?(method_name)
+    # overwrite tis to build your custom scopes
+    def raw_args_from_scope?(method_name)
       respond_to?("#{method_name}_scope_options")
     end
 
@@ -32,7 +32,7 @@ module Scopify
           elsif options.is_a?(Scope)
             options
           else
-            scoped(options)      
+            scoped(options)
           end
         end
       CODE

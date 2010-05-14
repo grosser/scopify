@@ -20,9 +20,8 @@ module Scopify
       if options.is_a?(Scope)
         # merge in raw options e.g. :limit => [1, 2]
         options.scope_options.each do |k,v|
-          old = merged[k] || []
-          merged[k] = v
-          old.each{|x| merged[k] << x }
+          merged[k] ||= []
+          v.each{|x| merged[k] << x }
         end
       else
         # merge in a normal hash e.g. :limit => 1
@@ -59,10 +58,10 @@ module Scopify
     end
 
     def method_missing(method_name, *args, &block)
-      if @base.respond_to?(:return_scope?) and @base.return_scope?(method_name)
+      if @base.respond_to?(:raw_args_from_scope?) and @base.raw_args_from_scope?(method_name)
         # the method we call is a scope, continue chaining
-        scope = @base.send(method_name, *args, &block)
-        scope.scoped(self)
+        result = @base.send(method_name, *args, &block)
+        result.is_a?(Scope) ? scoped(result) : result
       else
         # the method we call is a normal method, flatten everything
         options = (args.first||{})

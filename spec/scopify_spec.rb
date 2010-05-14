@@ -32,12 +32,12 @@ class T3
     options
   end
 
-  def self.return_scope?(name)
+  def self.raw_args_from_scope?(name)
     return true if super
-    name == :i_return_scope
+    name == :i_scope
   end
 
-  def self.i_return_scope(options)
+  def self.i_scope(options)
     scoped(options)
   end
 end
@@ -115,8 +115,20 @@ describe Scopify do
 
     it "calls method with raw arguments if they return scope" do
       T3.scope(:bbb, :limit => 1)
-      T3.should_receive(:i_return_scope).with(:offset => 1).and_return T3.bbb
-      T3.bbb.i_return_scope(:offset => 1).scope_options.should == T3.bbb.bbb.scope_options
+      T3.should_receive(:i_scope).with(:offset => 2).and_return T3.scoped(:offset => 2)
+      T3.bbb.i_scope(:offset => 2)
+    end
+
+    it "scopes in corret order when using scope-returning method" do
+      T3.scope(:ccc, :limit => 1)
+      T3.stub!(:i_scope).and_return T3.scoped(:offset => 2)
+      T3.bbb.i_scope(:offset => 2).scope_options.should == T3.bbb.scoped(:offset => 2).scope_options
+    end
+
+    it "does not crash when scope-returning method does not return a scope" do
+      T3.scope(:ccc, :limit => 1)
+      T3.stub!(:i_scope).and_return []
+      T3.ccc.i_scope(:offset => 2).should == []
     end
   end
 

@@ -23,6 +23,25 @@ Create named scopes, with options, lambdas or other scopes
     MyDBWrapper.good.first
     MyDBWrapper.good.goodness(3).first
 
+### Custom scope helpers
+    class MyDBWrapper
+      def self.foo(num)
+        scoped(:foo => num)
+      end
+
+      def self.bar(num)
+        scoped(:bar => num)
+      end
+
+      # tell scopes to pass raw arguments to foo and bar (not merged options hash)
+      def self.raw_args_from_scope?(method_name)
+        return true if super
+        [:foo, :bar].include?(method_name)
+      end
+    end
+
+    MyDBWrapper.foo(1).bar(3) == MyDBWrapper.scoped(:foo => 1, :bar => 3)
+
 ### scope_to_hash
 Roll your own condition composing.
     # not good ?
@@ -44,22 +63,6 @@ Roll your own condition composing.
 
     # better now !
     MyDBWrapper.scoped(:order => 'a').scoped(:order => 'b).all --> {:order => "a AND b"}
-
-### Advanced: return_scope?(method_name)
-Get raw arguments instead of a merged options hash.
-    class MyDBWrapper
-      def self.return_scope?(method_name)
-        return true if super
-        method_name == :i_return_scope
-      end
-
-      def self.i_return_scope(pure_args)
-        scoped(pure_args.merge(:offset => 1))
-      end
-    end
-
-    MyDBWrapper.scoped(:limit=>1).i_return_scope(:order => 'x')
-    --> receives {:order => 'x'}, not a merged options hash. 
 
 Author
 ======
