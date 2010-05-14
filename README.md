@@ -45,10 +45,6 @@ Roll your own condition composing.
     # better now !
     MyDBWrapper.scoped(:order => 'a').scoped(:order => 'b).all --> {:order => "a AND b"}
 
-### first
-When calling first on and scope, `:limit => 1` will be added
-    MyDBWrapper.scoped(:limit => 1).all == MyDBWrapper.first
-
 Author
 ======
 [Michael Grosser](http://pragmatig.wordpress.com)  

@@ -65,7 +65,6 @@ module Scopify
       else
         # the method we call is a normal method, flatten everything
         options = (args.first||{})
-        options = options.merge(:limit => 1) if method_name.to_sym == :first
         options = scoped(options).to_hash
         @base.send(method_name, options, &block)
       end

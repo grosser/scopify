@@ -40,10 +40,6 @@ describe Scopify do
       T1.scoped({:limit => 1}).foo(:offset => 1).should == {:limit => 1, :offset => 1}
     end
 
-    it "adds limit => 1 to first queries" do
-      T1.scoped({:order => 'FOO'}).first.should == {:limit => 1, :order => 'FOO'}
-    end
-
     it "can stack" do
       T1.scoped(:limit => 1).scoped(:order => 'X').foo.should == {:limit => 1, :order => 'X'}
     end
