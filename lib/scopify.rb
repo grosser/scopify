@@ -12,6 +12,11 @@ module Scopify
       Scope.build(self, options)
     end
 
+    # overwrite tis to enable your custom scopes
+    def return_scope?(method_name)
+      respond_to?("#{method_name}_scope_options")
+    end
+
     def scope(name, options)
       # give access to current options inside of evaled method
       meta_class = (class << self; self; end)

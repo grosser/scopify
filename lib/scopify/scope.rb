@@ -58,9 +58,9 @@ module Scopify
     end
 
     def method_missing(method_name, *args, &block)
-      if @base.respond_to?("#{method_name}_scope_options")
+      if @base.respond_to?(:return_scope?) and @base.return_scope?(method_name)
         # the method we call is a scope, continue chaining
-        scope = @base.send(method_name, *args)
+        scope = @base.send(method_name, *args, &block)
         scope.scoped(self)
       else
         # the method we call is a normal method, flatten everything

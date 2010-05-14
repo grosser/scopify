@@ -26,6 +26,22 @@ class T2
   end
 end
 
+class T3
+  include Scopify
+  def self.foo(options)
+    options
+  end
+
+  def self.return_scope?(name)
+    return true if super
+    name == :i_return_scope
+  end
+
+  def self.i_return_scope(options)
+    scoped(options)
+  end
+end
+
 describe Scopify do
   describe :scoped do
     it "returns a new scope" do
@@ -90,6 +106,17 @@ describe Scopify do
       T1.scope(:ccc, :order => 'a')
       T1.scope(:ccc2, :order => 'b')
       T1.ccc2.ccc.foo.should == {:order => 'b, a'}
+    end
+
+    it "calls methods with a options if they dont accept scopes" do
+      T3.scope(:aaa, :limit => 1)
+      T3.aaa.foo(:offset => 1).should == {:offset => 1, :limit => 1}
+    end
+
+    it "calls method with raw arguments if they return scope" do
+      T3.scope(:bbb, :limit => 1)
+      T3.should_receive(:i_return_scope).with(:offset => 1).and_return T3.bbb
+      T3.bbb.i_return_scope(:offset => 1).scope_options.should == T3.bbb.bbb.scope_options
     end
   end
 

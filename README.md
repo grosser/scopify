@@ -45,6 +45,22 @@ Roll your own condition composing.
     # better now !
     MyDBWrapper.scoped(:order => 'a').scoped(:order => 'b).all --> {:order => "a AND b"}
 
+### Advanced: return_scope?(method_name)
+Get raw arguments instead of a merged options hash.
+    class MyDBWrapper
+      def self.return_scope?(method_name)
+        return true if super
+        method_name == :i_return_scope
+      end
+
+      def self.i_return_scope(pure_args)
+        scoped(pure_args||{}).scoped(:offset => 1)
+      end
+    end
+
+    MyDBWrapper.scoped(:limit=>1).i_return_scope(:order => 'x')
+    --> receives {:order => 'x'}, not a merged options hash. 
+
 Author
 ======
 [Michael Grosser](http://pragmatig.wordpress.com)  
