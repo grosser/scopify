@@ -38,14 +38,19 @@ module Scopify
       result = if @base.respond_to?(:scope_to_hash)
         @base.scope_to_hash(@options)
       else
-        @options.map do |k,v|
-          result = case k
-          when :limit, :offset then v.min
-          when :conditions then "(#{v * ") AND ("})"    
-          when :order then v * ', '
-          else v
+        @options.map do |key, values|
+          result = case key
+          when :limit, :offset then values.min
+          when :conditions
+            if values.all?{|x| x.is_a?(Hash)}
+              values.inject({}){|hash, x| hash.merge(x)}
+            else
+              "(#{values * ") AND ("})"
+            end
+          when :order then values * ', '
+          else values
           end
-          [k, result]
+          [key, result]
         end
       end
 

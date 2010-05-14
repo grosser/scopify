@@ -132,6 +132,16 @@ describe Scopify do
     end
   end
 
+  describe "default to_hash" do
+    it "merges conditions that are hashes" do
+      T1.scoped(:conditions => {:x=>true}).scoped(:conditions => {:y => true}).to_hash.should == {:conditions => {:x => true, :y => true}}
+    end
+
+    it "merges conditions that are strings" do
+      T1.scoped(:conditions => "x = 1").scoped(:conditions => "y = 1").to_hash.should == {:conditions => "(x = 1) AND (y = 1)"}
+    end
+  end
+
   it "has a VERSION" do
     Scopify::VERSION.should =~ /^\d+\.\d+\.\d+$/
   end
