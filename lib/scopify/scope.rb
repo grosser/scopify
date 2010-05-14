@@ -42,6 +42,7 @@ module Scopify
         @options.map do |k,v|
           result = case k
           when :limit, :offset then v.min
+          when :conditions then "(#{v * ") AND ("})"    
           when :order then v * ', '
           else v
           end

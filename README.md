@@ -54,7 +54,7 @@ Get raw arguments instead of a merged options hash.
       end
 
       def self.i_return_scope(pure_args)
-        scoped(pure_args||{}).scoped(:offset => 1)
+        scoped(pure_args.merge(:offset => 1))
       end
     end
 
