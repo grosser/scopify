@@ -42,6 +42,11 @@ class T3
   end
 end
 
+class T4
+  include Scopify
+  simple_scope :limit, :where => :conditions
+end
+
 describe Scopify do
   describe :scoped do
     it "returns a new scope" do
@@ -129,6 +134,16 @@ describe Scopify do
       T3.scope(:ccc, :limit => 1)
       T3.stub!(:i_scope).and_return []
       T3.ccc.i_scope(:offset => 2).should == []
+    end
+  end
+
+  describe :simple_scope do
+    it "builds simple scopes" do
+      T4.limit(1).scope_options.should == {:limit => [1]}
+    end
+
+    it "builds renamed scopes" do
+      T4.where('x').scope_options.should == {:conditions => ['x']}
     end
   end
 

@@ -23,6 +23,14 @@ Create named scopes, with options, lambdas or other scopes
     MyDBWrapper.good.first
     MyDBWrapper.good.goodness(3).first
 
+### simple_scope
+Defines otherwise repetitive named scopes for you.
+
+    simple_scope :limit, :order, :where => :conditions
+    --> MyDBWrapper.limit(3).order('foo').where("1 = 2") == 
+        {:limit => 3, :order => 'foo', :conditions => "1 = 2"}
+
+
 ### Custom scope helpers
     class MyDBWrapper
       def self.foo(num)

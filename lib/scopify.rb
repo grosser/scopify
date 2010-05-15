@@ -37,5 +37,17 @@ module Scopify
         end
       CODE
     end
+
+    def simple_scope(*args)
+      args.each do |names|
+        if names.is_a?(Hash)
+          names.each do |name, value|
+            scope name, lambda{|x| {value => x}}
+          end
+        else
+          scope names, lambda{|x| {names => x}}
+        end
+      end
+    end
   end
 end
