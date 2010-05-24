@@ -47,22 +47,42 @@ class T4
   simple_scope :limit, :where => :conditions
 end
 
+class T5
+  include Scopify
+
+  def self.foo(*args)
+    args
+  end
+end
+
 describe Scopify do
   describe :scoped do
     it "returns a new scope" do
       T1.scoped({}).class.should == Scopify::Scope
     end
 
-    it "can call anything on scope to reach base" do
-      T1.scoped({:limit => 1}).foo.should == {:limit => 1}
+    it "can call hash on scope to reach base" do
+      T5.scoped({:limit => 1}).foo.should == [{:limit => 1}]
     end
 
-    it "can call anything giving additional options" do
-      T1.scoped({:limit => 1}).foo(:offset => 1).should == {:limit => 1, :offset => 1}
+    it "can call anything on scope to reach base" do
+      T5.scoped({:limit => 1}).foo(:xxx).should == [:xxx, {:limit => 1}]
+    end
+
+    it "can call giving additional options" do
+      T5.scoped({:limit => 1}).foo(:offset => 1).should == [{:limit => 1, :offset => 1}]
+    end
+
+    it "can call with args and giving additional options" do
+      T5.scoped({:limit => 1}).foo(:xxx, :offset => 1).should == [:xxx, {:limit => 1, :offset => 1}]
     end
 
     it "can stack" do
-      T1.scoped(:limit => 1).scoped(:order => 'X').foo.should == {:limit => 1, :order => 'X'}
+      T5.scoped(:limit => 1).scoped(:order => 'X').foo.should == [{:limit => 1, :order => 'X'}]
+    end
+
+    it "can stack with additional args" do
+      T5.scoped(:limit => 1).scoped(:order => 'X').foo(:xxx).should == [:xxx, {:limit => 1, :order => 'X'}]
     end
 
     it "overwrites limit with the minimum" do
@@ -124,7 +144,7 @@ describe Scopify do
       T3.bbb.i_scope(:offset => 2)
     end
 
-    it "scopes in corret order when using scope-returning method" do
+    it "scopes in correct order when using scope-returning method" do
       T3.scope(:ccc, :limit => 1)
       T3.stub!(:i_scope).and_return T3.scoped(:offset => 2)
       T3.bbb.i_scope(:offset => 2).scope_options.should == T3.bbb.scoped(:offset => 2).scope_options

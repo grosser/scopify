@@ -68,10 +68,13 @@ module Scopify
         result = @base.send(method_name, *args, &block)
         result.is_a?(Scope) ? scoped(result) : result
       else
-        # the method we call is a normal method, flatten everything
-        options = (args.first||{})
+        # the method we call is a normal method
+        # - scope by options from last method call
+        # - flatten scope to options hash
+        options = (args.last.is_a?(Hash) ? args.pop : {})
         options = scoped(options).to_hash
-        @base.send(method_name, options, &block)
+        args << options
+        @base.send(method_name, *args, &block)
       end
     end
   end
