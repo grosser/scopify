@@ -6,6 +6,12 @@ Add named scopes and chainable scopes to any Object / Model.
 Usage
 =====
 
+### With framework:
+ - MongoMapper  
+    MongoMapper::Document::ClassMethods.send(:include, Scopify::ClassMethods)
+    MongoMapper::Plugins::Associations::Proxy.send(:include, Scopify::ClassMethods)
+ - Add another ;)
+
 ### scoped
 Create a scope on the fly.
     MyDBWrapper.scoped(:limit => 10).scoped(:order => "something").all(:offset => 1)
@@ -71,6 +77,8 @@ Roll your own condition composing.
 
     # better now !
     MyDBWrapper.scoped(:order => 'a').scoped(:order => 'b).all --> {:order => "a AND b"}
+
+
 
 Author
 ======
